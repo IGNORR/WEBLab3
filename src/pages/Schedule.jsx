@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import '../styles.css';
+import ScheduleItem from '../components/ScheduleItem';
 
 const Schedule = () => {
-  // Початковий розклад
   const defaultSchedule = [
     { date: "05.05.2025", time: "17:00 - 18:20", course: "Основи програмування", teacher: "Іван Петров" },
     { date: "05.05.2025", time: "18:30 - 19:50", course: "Веб-розробка", teacher: "Ольга Коваль" },
@@ -21,13 +21,11 @@ const Schedule = () => {
     { date: "09.05.2025", time: "20:00 - 21:20", course: "UI/UX Дизайн", teacher: "Антон Горбаченко" }
   ];
 
-  // Ініціалізація стану з localStorage
   const [schedule, setSchedule] = useState(() => {
     try {
       const saved = localStorage.getItem('schedule');
       if (saved) {
         const parsed = JSON.parse(saved);
-        // Перевіряємо, чи є дані в localStorage і чи вони вірного формату
         return Array.isArray(parsed) && parsed.length > 0 ? parsed : defaultSchedule;
       }
       return defaultSchedule;
@@ -36,37 +34,34 @@ const Schedule = () => {
     }
   });
 
-  // Збереження стану в localStorage
   useEffect(() => {
     localStorage.setItem('schedule', JSON.stringify(schedule));
   }, [schedule]);
 
-  // Оновлення розкладу
   useEffect(() => {
     const timer = setInterval(() => {
       setSchedule(prevSchedule => {
-        // Якщо розклад порожній або містить менше 3 елементів, повертаємо початковий
         if (prevSchedule.length < 3) {
           return [...defaultSchedule];
         }
-        
+
         const newSchedule = [...prevSchedule];
         const movedItems = newSchedule.splice(0, 3);
-        
+
         const updatedItems = movedItems.map(item => {
           try {
             const [d, m, y] = item.date.split('.').map(Number);
             const dateObj = new Date(y, m - 1, d);
-        
+
             let addedDays = 0;
             while (addedDays < 7) {
               dateObj.setDate(dateObj.getDate() + 1);
               const day = dateObj.getDay();
               if (day !== 0 && day !== 7) addedDays++;
             }
-        
+
             const pad = num => String(num).padStart(2, '0');
-        
+
             return {
               ...item,
               date: `${pad(dateObj.getDate())}.${pad(dateObj.getMonth() + 1)}.${dateObj.getFullYear()}`
@@ -75,8 +70,7 @@ const Schedule = () => {
             return item;
           }
         });
-        
-        
+
         return [...newSchedule, ...updatedItems];
       });
     }, 15000);
@@ -98,12 +92,7 @@ const Schedule = () => {
         </thead>
         <tbody>
           {schedule.map((item, index) => (
-            <tr key={index}>
-              <td>{item.date}</td>
-              <td>{item.time}</td>
-              <td>{item.course}</td>
-              <td>{item.teacher}</td>
-            </tr>
+            <ScheduleItem key={index} item={item} />
           ))}
         </tbody>
       </table>

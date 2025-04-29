@@ -1,4 +1,5 @@
 import '../styles.css';
+import CourseProgress from '../components/CourseProgress';
 
 const Profile = ({ userCourses }) => {
   return (
@@ -11,15 +12,7 @@ const Profile = ({ userCourses }) => {
         <h2>Мої курси</h2>
         <ul>
           {userCourses.map((course, index) => (
-            <li key={index}>
-              {course.name} - {course.progress}%
-              <div className="progress-container">
-                <div className="progress-bar green" style={{ width: `${course.progress}%` }}></div>
-              </div>
-              {course.completed && (
-                <p className="certificate-label">Сертифікат отримано</p>
-              )}
-            </li>
+            <CourseProgress key={index} course={course} />
           ))}
         </ul>
       </section>
