@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   
-  background: url('webbb1.webp') no-repeat center center fixed;
+  background: url('../public/webbb1.webp') no-repeat center center fixed;
   background-size: cover;
   color: #333;
 }
@@ -235,6 +235,10 @@ h1 {
   border-radius: 15px;
   margin: 30px auto;
   max-width: 900px;
+}
+
+.news h2{
+  text-align: center;
 }
 
 .reviews {
